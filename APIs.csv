@@ -1,0 +1,429 @@
+tasks,function_name,frontend_url,backend_url,parameters/args,parameter_descriptions,descriptions,rest_api
+Talent search,getTalents,/dashboard/talents,/user/info,"jobType, professionalLevel, country,  experienceYears, degrees, skill, role, state","['jobType' -> Takes a JSON object with the following keys (fullTime, partTime, contract, internship, remote) and boolean values (example {'fullTime': True, 'partTime': True, 'contract': False, 'internship': False, 'remote': False});
+
+'professionalLevel' -> Takes a JSON object with the following keys (entryLevel, juniorLevel, middleLevel, seniorLevel, directorLevel, VPabove) and boolean values (example {'entryLevel': True, 'juniorLevel': True, 'middleLevel': False, 'seniorLevel': False, 'directorLevel': False, 'VPabove': True});
+
+'country' -> Takes a string corresponding to country names separated by commas. Example ('Nigeria', 'United States', 'China'); If a continent is mentioned, the country parameter should return ALL the countries in that continent as a comma separated string.
+
+'experienceYears' -> Takes a string from one of '0-2 years', '2-5 years', '5-10 years';
+
+'degrees' -> Takes a string from one of 'Bachelor's Degree', 'Master's Degree', 'PhD';
+
+'skills' -> Takes a comma separated string highlighting the candidate(s)'s skills example ""Python, Java, React, Node, JavaScript, SQL, Tableau, Laveral, Flutter"";
+
+'role' -> A string or a comma separated string highlighting the job headline, example 'Data Analyst', 'Software Engineer' or ""Chef, Frontend developer, Lawyer"";
+
+'state' -> A comma separated string highlighting the state in the country where the candidate(s) reside(s) and the state code in parentheses example ['Abuja (ABJ)', 'Texas (TX)', 'London (LDN)']","The 'getTalents' function gets and displays profiles of staff, talent, and candidates for roles/ jobs, based on certain criteria. If user' intention is to search for candidates, you are to strictly output a JSON response in this format:
+
+    {
+        ""is_sure"": true,
+        ""text_response"": This will be a message from the AI,
+        ""function_name"": ""getTalents"",
+        ""params"": {'jobType, professionalLevel, country (required when state or continent is provided), experienceYears, degrees, skill, role, state', country},
+        'frontend_url': '/dashboard/talents', 
+        'backend_url': '/user/info',
+        'rest_api': 'GET',
+        'limit': number of candidates requested for (Default is 50 if no value is observed.)
+    };
+
+    The 'text_response' parameter is the response from the AI to present user with a response and also ask if they need any other thing
+    The parameters/args in the json, it should be a list containing the following description
+    ['jobType' -> Takes a JSON object with all the keys in this tuple -> (fullTime, partTime, contract, internship, remote) and with each key having a boolean value (examples: {{'fullTime': True, 'partTime': True, 'contract': False, 'internship': False, 'remote': False}} or {{'fullTime': True, 'partTime': True, 'contract': False, 'internship': True, 'remote': True}} or {{'fullTime': True, 'partTime': False, 'contract': False, 'internship': False, 'remote': False}}) If nothing is entered for this, do not include it;
+    'professionalLevel' -> Takes a JSON object with all the keys in this tuple -> (entryLevel, juniorLevel, middleLevel, seniorLevel, directorLevel, VPabove) and with each key having a boolean value [a co-founder qualifies for VPabove] (examples: {{'entryLevel': True, 'juniorLevel': True, 'middleLevel': False, 'seniorLevel': False, 'directorLevel': False, 'VPabove': True}} or {{'entryLevel': True, 'juniorLevel': True, 'middleLevel': False, 'seniorLevel': False, 'directorLevel': False, 'VPabove': False}} or {{'entryLevel': False, 'juniorLevel': False, 'middleLevel': False, 'seniorLevel': True, 'directorLevel': False, 'VPabove': False}});nn'country' -> Takes a string corresponding to country names separated by commas, or all the countries in a given continent. Example ('Nigeria', 'United States', 'China'); If a continent is provided, the country parameter must return all the countries in that continent as a comma separated string. Continents are not countries.nn'experienceYears' -> Takes a list of strings where elements are from the options: '0 experience years', '0-2 experience years', '2-5 experience years', '5-10 experience years', '10-15 experience years', '15-20 experience years', '20+ experience years';nn'degrees' -> Takes a list of strings, where elements are gotten from these options: 'High School', 'Associate Degree', 'Bachelor's Degree', 'Master's Degree', 'Doctoral Degree';nn'skill' -> Takes a comma separated string highlighting the tools that the candidate(s) is proficient in example \""Python, Java, React, Node, JavaScript, SQL, Tableau, Laveral, Flutter\"";nn'role' -> A string or a comma separated string highlighting the candidates' job headline, example 'Data Analyst', 'Software Engineer', 'Developer', 'Machine Learning Engineer' or \""Chef, Frontend developer, Lawyer\"";nn'state' -> A string, or comma-separated string highlighting the official state name in the country where the candidates reside example ['Abuja','Lagos', 'Texas', 'London', 'Harare']. 
+
+    **state_instructions:** 
+    When a user inputs a location that does not match an official state name or inputs a town within or near a state (e.g., Ibadan instead of Oyo, or Dallas instead of Texas, or Lugbe instead of Abuja), proceed with the following steps sequentially: 
+    1) Pass all other parameters except the state parameter. 
+    2) Ensure to ask the user for clarification by suggesting possible states. For example, ask:- 'Do you mean Lagos, Nigeria?', 'Are you referring to Mumbai, India?'""];
+    3) Always pass the country parameter if state parameter is passed.
+
+    special_instructions: Your first instinct should be to return available talent (no criteria), if the user's prompt is not clear. Do not use parameters not stated in parameter/args..... Default limit is 50(which is the number of candidates requested)
+    descriptions: The 'getTalents' function retrieves people's / candidates' information from the Loubby AI database based on specified parameters. This function is designed to facilitate searching and filtering of talents. The talent database contains comprehensive information about individuals with various skills, expertise, and qualifications; ",GET
+Create Job,createJob,/dashboard/jobs/joblisting,/employer/listing/create,"jobTitle, jobDescription, jobType, jobLocation, jobSalary, rateCurrency, jobSalaryMin, jobSalaryMax, salaryCurrency, jobRate, applicationDeadline, numberOfPositions, openToRemote, perks, jobSkills","['jobTitle' -> Takes a string that highlights the job role. 
+
+'jobDescription' -> Takes a string providing the job description. 
+
+'jobType' -> Takes a JSON object with the following keys (fullTime, partTime, contract, internship, remote) 
+and boolean values (example {'fullTime': True, 'partTime': True, 'contract': False, 'internship': False, 'remote': False}); 
+
+'jobLocation' -> Takes a string corresponding to country or continent names separated by commas. 
+Example ('Nigeria', 'United States', 'Ghana'); 
+
+'jobSalary' -> Takes an integer which signifies the salary for the job. Example 25000, 40000 
+
+'salaryCurrency' -> Takes a string of the short form for the currency that the compensation 
+will be made in. Example ('USD', 'NGN', 'GPB', 'AUD') 
+
+'jobSalaryMin' -> Takes an integer which signifies the minimum salary for the job. Example 25000 
+
+'jobSalaryMin' -> Takes an integer which signifies the maximum salary for the job. Example 95000 
+
+'rateCurrency' -> Takes a string containing the rate currency of the job. example USD, EUR 
+
+'jobrate' -> Takes a string containing the rate at which the compensation will be made; one of 'Hourly', 'Daily', 'Weekly', 'Bi-weekly', 'Monthly' 
+
+'applicationDeadline' -> Takes a datechar containing the application deadline date. Example ('22/2/2024', '03/03/2024') 
+
+'numberOfPositions' -> An integer highlighting the number of positions available for that position. Default is 1 
+
+'openToRemote' -> Takes a Boolean value, highlighting if job is remote 
+
+'perks' -> Takes a string corresponding to the benefits seperated by commas. Example ('health insurance', 'retirement plans', 'paid time off', 'flexible work hours', 'wellness programs', 'professional development opportunities') 
+
+'jobSkills' -> Takes a comma separated string highlighting the candidate(s)'s skills example ""Python, Java, React, Node, JavaScript, SQL, Tableau, Laveral, Flutter""","The 'createJob' function facilitates the process of adding a new job listing to the Loubby AI job platform. If user' intention is to Create a Job, strictly output a JSON response in this format:
+
+    {
+        ""isSure"": true,
+        ""text_response"": This will be a message from the AI,
+        ""function_name"": ""createJob"",
+        ""params"": {
+            ""jobTitle"": ""Data Scientist"",
+            ""jobDescription"": The generated Job description based on the Job title and skills.
+            ""jobType"": ""Full Time"",
+            ""jobLocation"": [
+                ""Remote""
+            ],
+            ""jobSalaryMin"": 400000,
+            ""jobSalaryMax"": 450000,
+            ""salaryCurrency"": ""USD"",
+            ""jobRate"": ""Monthly"",
+            ""applicationDeadline"": ""2024-08-18"",
+            ""numberOfPositions"": 1,
+            ""openToRemote"": true,
+            ""perks"": {
+                ""fourZeroOneK"": true
+            },
+            ""jobSkills"": [
+                ""Python"",
+                ""R"",
+                ""SQL"",
+                ""Tableau"",
+                ""Power BI""
+            ],
+            ""experienceLevel"": [
+                ""Senior Level""
+            ]
+        },
+        ""backend_url"": ""/employer/listing/create"",
+        ""frontend_url"": ""/dashboard/jobs"",
+        ""rest_api"": ""POST""
+    }
+
+
+
+    parameter_descriptions:
+    jobTitle(required) -> This parameter is required. It takes a string that highlights the job role.
+    jobDescription(required: minimum of 150 words) -> Takes a string providing the job description; Jabari generates this for the user using the following examples:
+
+        Example 1:
+        (***About Us*** \n 
+        At ExxonMobil, our vision is to lead in energy innovations that advance modern living and a net-zero future. As one of the world?s largest publicly traded energy and chemical companies, we are powered by a unique and diverse workforce fueled by the pride in what we do and what we stand for. \n
+        We invite you to bring your ideas to ExxonMobil to help create sustainable solutions that improve quality of life and meet society?s evolving needs. Learn more about our What and our Why and how we can work together. \n
+        What role you will play in our team \n 
+        1) As a Data Analyst in the Land Transportation Unit of our Supply Chain Department, you will play a crucial role in optimizing the efficiency and effectiveness of our land transportation operations. \n 
+        2) You will be responsible for collecting, analyzing, and interpreting data related to transportation routes, vehicle performance, fuel consumption, driver behavior, and other key metrics. \n 
+        3) Your insights will drive decision-making processes, enabling us to streamline our transportation processes, reduce costs, improve delivery times, and enhance overall customer satisfaction. Additionally, you will collaborate with cross-functional teams to develop predictive models, generate actionable reports, and identify opportunities for process improvements. \n 
+        4) This role requires strong analytical skills, proficiency in data visualization tools, and a deep understanding of transportation logistics. If you are passionate about leveraging data to drive operational excellence and eager to make a meaningful impact in the supply chain industry, we encourage you to apply. \n 
+        5) Additionally, you'll play a crucial role in implementing technology solutions, such as ERP systems, to streamline operations and ensure compliance with industry regulations. \n 
+        Strong analytical skills, industry knowledge, and effective communication are essential for success in this role. \n
+        Preferred Qualifications/ Experience \n
+        1) Bachelor's degree in Data Science, Statistics, Computer Science, Engineering, or a related field with a minimum of 2nd class upper or its equivalent. A master?s degree or a professional qualification will be an added advantage. \n 
+        2) Maximum of 2 years of post-graduation experience. \n 
+        3) Proficiency in programming languages such as Python, R, or SQL, with the ability to manipulate and analyze complex datasets efficiently.\n 
+        4) Experience with data visualization tools like Tableau, Power BI, or Matplotlib to create insightful visual representations of data for stakeholders.\n 
+        5) Understanding of statistical methods and concepts, including hypothesis testing, regression analysis, and predictive modelling)\n 
+        
+        Example 2:
+        (***Company Description:*** \n
+        AJ Skylar Ltd, a dynamic force nurturing two exceptional brands - Sshhh Lingerie Ltd and The Braiding Vault Ltd. As the central parent entity, AJ Skylar Ltd oversees a diverse range of businesses encompassing retail stores, beauty salons, restaurants, property construction, and rentals. 
+        ***Role Description:*** \n
+        This is a full-time on-site role for a Human Resources Manager located in Lekki. The Human Resources Manager will be responsible for overseeing day-to-day HR operations, including talent acquisition, retention and development, compensation and benefits, performance management, and employee relations. The Human Resources Manager will also work closely with senior management to develop and implement HR policies and procedures, and ensure compliance with labor laws and regulations. \n 
+        Qualifications: \n 
+        1. Bachelor's degree in Human Resources, Business Administration, or a related field. Master's degree in HR management is a plus.
+        2. Minimum of 5 years of HR management experience, preferably in a high-growth environment with demonstrated experience in talent acquisition and retention, performance management, and HR policy and procedure. 
+        3. Excellent communication and interpersonal skills, with demonstrated experience in collaborating with cross-functional stakeholders, senior management, and external partners. 
+        4. Ability to think critically and solve complex HR challenges in a fast-paced and dynamic environment 
+        5. Strong knowledge of labor laws and regulations in Nigeria 
+        6. Professional certification in HR management (e.g., SHRM, HRCI) is a plus.)
+
+    jobType(required) -> Takes a string which is one of the following options [Full Time, Part Time, Contract, Internship]; 
+    jobLocation(required) -> (must have at least 1 item) -> Takes a list of strings corresponding to country or continent names separated by commas. Example ['Nigeria', 'United States', 'Ghana']; 
+    jobSalary(required) -> Takes a string which is one of ['Negotiable', '0-500', '500-1000', '1000-2000', '2000-5000', '5000-15000', '15000 and above']; don't ask for this, but deduce it from the compensation inputted by the user
+    salaryCurrency(required) -> Takes a string of the short form for the currency that the compensation will be made in. One of ['USD', 'NGN', 'GPB']
+    jobSalaryMin(required) -> Takes an integer which signifies the minimum salary for the job. Example 25000 
+    jobSalaryMax(required) -> Takes an integer which signifies the maximum salary for the job. Example 95000 
+    salaryCurrency(required) -> Takes a string containing the rate currency of the job. One of these NGN, USD, GPB
+    jobRate(required) -> Takes a string containing the rate at which the compensation will be made; one of 'Hourly', 'Daily', 'Weekly', 'Bi-weekly', 'Monthly' 
+    applicationDeadline (required) -> Takes a datechar containing the application deadline date. Example ('2024-03-04', '2024-08-02') 
+    numberOfPositions(priority) -> This parameter is highly required. It is an integer highlighting the number of positions available. Default value must be 1
+    openToRemote(required) -> Takes a Boolean value, highlighting if job is remote 
+    perks(required) -> Takes a JSON object with the following keys (bonusTarget, fourZeroOneK, medicalInsurance, dentalInsurance, visionInsurance, disabilityInsurance, stockOptions)and boolean values; present the keys in sentence case/proper grammar only to the user, and not in params. 
+    jobSkills(required) -> Takes a list of strings, separated by commas, highlighting the candidate(s) skills example [Python, Java, React, Node, JavaScript, SQL, Tableau, Laveral, Flutter] 
+    experienceLevel(required) -> Takes a list of strings, separated by commas, highlighting the candidate(s) experience level, taken strictly from one of the options [entryLevel, juniorLevel, middleLevel, seniorLevel, directorLevel, VPabove]; present these options in sentence case/proper grammar only to the user, and not in params.']',
+
+    This function does not take values such as null, none or empty strings. The user is required to provide all the parameters. Do not assume values for the parameters
+    Example prompts: 
+        Create a job listing for a Senior Software Engineer position with a minimum salary of $90,000 and maximum salary of $120,000, open to remote work. 
+        Post a job for a Marketing Specialist with a description emphasizing creativity and experience in social media management. 
+        Add a job opportunity for a Project Manager with a deadline for applications set to two weeks from today. 
+        Create a job for a Data Analyst with proficiency in Python and experience in data visualization. 
+        Post a job listing for a Front-end Developer with a job location in San Francisco and offering competitive perks. 
+        
+    Emergency Instructions:
+    Do not pass none or null as a field value. Do not also pass an empty string as such value. Do not proceed to create the job until the user provides all required parameters
+    At the point when the user has given all the values for the required parameters to create the job, always ask the user if they want to make any changes to any of the parameters they gave. If not then create the job
+    ""The 'createJob' function facilitates the process of adding a new job listing to the Loubby AI job platform. 
+    Also ensure to ask user if they have a company url to aid in generating a proper job description because we intend to use the company details to generate a proper job description.",POST
+Edit Jobs,updateJob,/dashboard/jobs,/employer/listing/{id},"jobTitle, jobDescription, jobType, jobLocation, jobSalary, rateCurrency, jobSalaryMin, jobSalaryMax, salaryCurrency, jobRate, applicationDeadline, numberOfPositions, openToRemote, perks, jobSkills","['jobTitle' -> Takes a string that highlights the job role.
+
+'jobDescription' -> Takes a string providing the job description. 
+
+'jobType' -> Takes a JSON object with the following keys (fullTime, partTime, contract, internship, remote)
+and boolean values (example {'fullTime': True, 'partTime': True, 'contract': False, 'internship': False, 'remote': False});
+
+'jobLocation' -> Takes a string corresponding to country or continent names separated by commas. 
+Example ('Nigeria', 'United States', 'Ghana');
+
+'jobSalary' -> Takes an integer which signifies the salary for the job. Example 25000, 40000
+
+'salaryCurrency' -> Takes a string of the short form for the currency that the compensation 
+will be made in. Example ('USD', 'NGN', 'GPB', 'AUD')
+
+'jobSalaryMin' -> Takes an integer which signifies the minimum salary for the job. Example 25000
+
+'jobSalaryMin' -> Takes an integer which signifies the maximum salary for the job. Example 95000
+
+'rateCurrency' -> Takes a string containing the rate currency of the job. example USD, EUR
+
+'jobrate' -> Takes a string containing the rate at which the compensation will be made; one of 'Hourly', 'Daily', 'Weekly', 'Bi-weekly', 'Monthly'
+
+'applicationDeadline' -> Takes a datechar containing the application deadline date. Example ('22/2/2024', '03/03/2024')
+
+'numberOfPositions' -> An integer highlighting the number of positions available for that position. Default is 1
+
+'openToRemote' -> Takes a Boolean value, highlighting if job is remote
+
+'perks' -> Takes a string corresponding to the benefits seperated by commas. Example ('health insurance', 'retirement plans', 'paid time off', 'flexible work hours', 'wellness programs', 'professional development opportunities') 
+
+'jobSkills' -> Takes a comma separated string highlighting the candidate(s)'s skills example ""Python, Java, React, Node, JavaScript, SQL, Tableau, Laveral, Flutter""","The 'updateJob' function allows the user to modify and update details of a job posting within the Loubby AI platform. If user' intention is to update or edit a job, you are to do the following:
+Given the JSON results obtained from the mongo database, if listed jobs with the particular job title the user asks for is more than one, list the job titles by date created in markdown format and ask user which of the jobs.
+    
+You are to strictly output a JSON in a similar format as the 'createJob' function.
+    
+    - Using the JSON document retrieved from the mongoDb database, update the content in the createJob JSON format.
+    - 'isSure' paramter should only turn to true when the user has confirmed they want to proceed with the update, else, it should always be false.
+    - Include the job _id field for the job being modified as a parameter and include it at the top of the JSON immediately after text_response parameter.
+    - Note that while we modify or edit jobs, the value for the parameter 'function_name' in the JSON will be 'updateJob'
+    - Because there may be several jobs with similar title, differentiate each job by date created and skills required in the text_response so user can identify the one they are refering to.
+    - If the job has been identified, procced to change the values of the parameter which is requested by the user.
+    - Always ensure that user confirms they want to proceed with the update.
+    - Note that the value for the rest_api parameter for this is ""PATCH""
+
+This function plays a crucial role in keeping job listings accurate and up-to-date. 
+Users can make adjustments to various aspects of a job, such as the title, description, location, salary, and other relevant details. 
+This ensures that the job information reflects the most current and accurate representation of the position.",PATCH
+Get Jobs,getEmployerJobs,/dashboard/jobs,employer/listing,,"""jobTitle,
+ jobDescription,
+ jobType,  
+jobLocation, 
+jobSalary, 
+rateCurrency, 
+jobSalaryMin, 
+jobSalaryMax, 
+salaryCurrency, 
+jobRate, 
+applicationDeadline, 
+numberOfPositions(default is 1), 
+openToRemote(default is false), 
+perks, 
+jobSkills(minimum is 3), 
+experienceLevel""","The 'getEmployerJobs' function gets a list of jobs created by the user. If the user's intention is to search fo a listed job, you are to strictly output a JSON response in this format:
+
+    {
+        ""isSure"": true,
+        ""text_response"": This will be the mesage from the AI,    
+        ""function_name"": ""getEmployerJobs"",
+        ""params"": {},
+        ""backend_url"": ""employer/listing"",
+        ""frontend_url"": ""/dashboard/jobs"",
+        ""rest_api"": ""GET""
+    }
+
+    'note': 
+    Tell the user - in the text response field - that you can not filter their job search. You can only return all their jobs.
+
+    ""The 'getEmployerJobs' function gets a list of jobs created by the user. 
+    This function is designed to provide a convenient way for employers to view the jobs listings they have posted. Keywords: search for, get, retrieve, return, show me, display, list, find, give, fetch, listing, posting. 
+    Examples of prompts that trigger this function include: 
+    - Show me all the jobs I've posted. 
+    - List my current job openings. 
+    - Show me my job listings. 
+    - Retrieve my job postings. 
+    - Display the jobs I've created recently.",GET
+Create Schedules,createSchedule,dashboard/schedule?tab=Scheduling+Links,/shared/schedules,,"[- 'name' -> Takes a string that contains the name of the schedule to be created
+
+- 'description' -> Takes a string that is the description of the schedule. 
+Example ('Standup meeting for employees')
+
+- 'durationInMinutes' -> Takes an integer which denotes the duration of the scheduled program in minutes
+
+- 'availability' -> Takes a JSON object with keys [startDate, endDate, days]
+
+* The startDate takes a JSON with keys [date, time, end, day] where
+date takes a datechar in the format 'YYYY-MM-DDTHH:mm:ss.ms', denoting the day that the rolling schedule is to start; 
+time takes a timechar in the format 'HH:mm' denoting the time that the scheduled event is to start whenever it holds;
+end takes a datechar in the format 'YYYY-MM-DDTHH:mm:ss.ms', denoting the date that the rolling schedule is to be terminated;
+day takes an integer representing the day of the week that the rolling schedule is to begin (1 for Monday, 2 for Tuesday, and so on).
+
+* The endDate takes a JSON with keys [date, time, day] where
+date takes a datechar in the format 'YYYY-MM-DDTHH:mm:ss.ms', denoting the date that the rolling schedule is to be terminated;
+time takes a timechar in the format 'HH:mm' denoting the time that the scheduled event is supposed to end whenever it holds;
+day takes an integer representing the day of the week for the day of termination of the rolling schedule (1 for Monday, 2 for Tuesday, and so on).
+
+* The days also takes a JSON object with keys [monday, tuesday, wednesday, thursday, friday, saturday, sunday] and boolean values.
+These keys represent the days of the week with which the event is repeated and if a schedule holds on a particular day, the value for that day is true but if it doesn? hold, the value for that day will be false.
+
+
+'additionalInfo' -> Takes a string containing additional information on the scheduled meeting, example 'Lateness is not allowed for this meeting'
+]","he 'createSchedule' function makes/ creates/ establishes/ builds a rolling / repeating schedule for events that are to be repeated periodically and frequently (daily, once, twice, or thrice a week) \nThis function is designed for users to create periodic schedules for events, meetings, interviews, stand up sessions etc. If the user's intention is to create a schedule, you are to strictly output a JSON response in this format:
+    Note: this is not the same as creating an event. 
+
+        {
+        ""isSure"": true,
+        ""text_response"": The AI message will be here,
+        ""function_name"": ""createSchedule"",
+        ""params"": {
+            ""title"": The title given by the user,
+            ""description"": a brief description of the the schedule,
+            ""availability"": {
+            ""startDate"": {
+                ""date"": this is the date at which the schedule will start e.g 20/08/2024
+                ""time"": this is the time at which the schedule will start e.g 11:00 am
+                ""day"": this is the day of the week that the schedule will start e.g monday, tuesday, wednesday
+            },
+            ""endDate"": {
+                ""date"": this is the date at which the schedule will end e.g 20/12/2024
+                ""time"": this is the time of the day at which the schedule will end e.g 2:00 pm
+                ""day"": this is the day of the week that the schedule will end e.g monday, tuesday, wednesday
+            },
+             ""days"": {
+                ""monday"": false,
+                ""tuesday"": false,
+                ""wednesday"": false,
+                ""thursday"": false,
+                ""friday"": true,
+                ""saturday"": false,
+                ""sunday"": false
+            }
+            ""additionalInformation"": any additional information the user wants to add,
+        },
+        ""backend_url"": ""/shared/events/create"",
+        ""frontend_url"": ""/dashboard/schedule"",
+        ""rest_api"": ""POST""
+        }
+
+        note: 'This function is only to be used for reoccuring schedule, such as daily standup, company anniversary.
+
+    
+    Examples of prompts that trigger this function include: 
+    - Create a schedule titled Football Match will be span for 6 months 
+    - Put up a schedule for me for weekly project review
+    - I want to create a schedule for the company daily stand up meeting
+
+    emergency_instructions: Do not pass none or null or empty string as a value to any parameter, but rather, ask the user to provide the value of the parameter. Do not proceed to create the schedule until the user provides all parameters.
+    Always ask the user if they want to make any changes to the inputs they made. DO NOT FORGET
+    The ""isSure"" parameter should be false until the user has inputted the values for the required paramters and is ready to create the schedule. Strictly adhere to this. 
+
+    Always note that for every json example containing the isSure parameter, it is to be sure that Jabari gets all values to the parameters which are deemed required. If all required parameters are not obtained from user prompt, the isSure parameter should remain false, else it should be true.
+    Note that if the request the user is making is not understood, output a json with an ai_message letting the user know that you don't understand and they should rephrase. 
+    If what user requests for is not what you offer, let user know that their request is not valid but do it respectfully, and remember to output in a ai_response json output. Also remind them of what you can do.",POST
+Get Schedule,getAllScheduledEvents,dashboard/schedule,/shared/events/create,,"['start' -> Takes a datechar corresponding to the start date and time. example (10/02/2024, 14/10/2024)
+
+'end' -> Takes a datechar corresponding to the start date and time. example (10/02/2024, 14/10/2024)
+]","The 'getAllScheduledEvents' function retrieves scheduled events within a specified time frame. If user' intention is to Get Scheduled Events, this usually means they are trying to assess the calender on the Loubby AI platorm. 
+    You are to strictly output a JSON response in this format:
+
+    {
+        ""isSure"": true,
+        ""text_response"": This will be a message from the AI,
+        ""function_name"": ""getAllScheduledEvents"",
+        ""params"": {
+            ""start"": The start date given by user,
+            ""end"": The end date given by user
+        },
+        ""backend_url"": ""/shared/events/create"",
+        ""frontend_url"": ""/dashboard/schedule"",
+        ""rest_api"": ""PATCH""
+    }
+
+    parameter_descriptions: 
+    start -> Takes a datechar corresponding to the start date and time in the format 'YYYY-MM-DDTHH:mm:ss.msZ'
+    end -> Takes a datechar corresponding to the end date and time in the format 'YYYY-MM-DDTHH:mm:ss.msZ'
+
+    description: 
+    The 'getAllScheduledEvents' function retrieves a list of all scheduled events within a specified time range from the event management system. 
+    Examples of prompts that trigger this function include: 
+        What events are scheduled from 2024-03-01 to 2024-03-15?
+        Give me a list of all upcoming events starting today.
+        Show me the events planned for next week.
+        List all scheduled activities between 10:00 AM and 5:00 PM tomorrow.",PATCH
+Create Event,createEvent,dashboard/schedule,/shared/events/create,"title, description, startDate, endDate, attendees, creator, emails, videoCallLink, embedVideoLink","title (required) -> Takes a string which is the title assigned to the event.
+    description (required) -> Takes a string that highlights the purpose of the event; Jabari may generate this, for the user using the following examples:
+        Example 1:
+        ***Team Meeting***
+        Join us for our upcoming team meeting where we'll discuss important updates, progress reports, and upcoming projects.
+        This meeting is a great opportunity to touch base with your colleagues, address any concerns, and collaborate on strategies moving forward.
+        Whether you're a seasoned team member or new to the group, your input is valuable, and your presence is appreciated.\n\n
+        Date and Time:\n
+        Friday, March 22, 2024, from 10:00 AM to 11:00 AM.\n\n
+        Location:\n
+        zoom.com/1h4b6j7b32k\n
+        Agenda:\n\n
+        Review of ongoing projects\n
+        New initiatives and upcoming deadlines\n
+        Team feedback and suggestions\n
+        Q&A session\n
+        Don't miss this chance to connect with the team and contribute to our collective success!\""\n\n
+        
+        Example 2:
+        ***Social Media Marketing Strategies for 2024***
+        Stay ahead of the curve with the latest insights and strategies in social media marketing for 2024. In this one-hour session, we'll delve into emerging trends, best practices, and innovative techniques to elevate your brand's presence on social platforms. Whether you're a seasoned marketer or just starting out, this session promises valuable takeaways to enhance your digital marketing efforts.\n\n
+        Date and Time:\n
+        Wednesday, April 3, 2024, from 12:00 PM to 1:00 PM.\n\n
+        Location:\n
+        meet.com.ng/kxbcs8r0ru\n\n
+        Topics Covered:\n\n
+        Content trends and formats\n
+        Platform-specific strategies\n
+        Influencer marketing\n
+        Analytics and measurement\n
+        Don't miss this opportunity to refine your social media marketing approach and drive meaningful results for your brand!\
+
+    startDate(required) -> Takes a datechar corresponding to the start date and time in the format YYYY-MM-DDTHH:mm:ss.msZ.
+    endDate(required) -> Takes a datechar corresponding to the end date and time in the format YYYY-MM-DDTHH:mm:ss.msZ
+    emails -> Takes a list of strings providing the email addresses of the attendees
+    videoCallLink -> Takes a url link string that redirects to the meeting
+    embedVideoLink -> Takes a boolean value [true if videoCallLink has a value, and false otherwise]; do not ask the user about this parameter\","The 'createEvent' function allows users to create/generate and schedule one-time events or meetings efficiently. If the user's intention is to create an event, you are to strictly output a JSON response in this format:
+
+    {
+        ""isSure"": a boolean value(true or false),
+        ""text_response"": The AI message will be here,
+        ""function_name"": ""createEvent"",
+        ""params"": {
+            ""title"": The title given by the user,
+            ""startDate"": The start date given by user,
+            ""endDate"": The end date given by user,
+            ""emails"": [
+                ""samplemail1@gmail.com"",
+                ""samplemail2@outlook.com""
+            ],
+            ""videoCallLink"": video call link provided by user,
+            ""embedVideoLink"": true,
+            ""description"": A propery generated Event description from the given event name.
+        },
+        ""backend_url"": ""/shared/events/create"",
+        ""frontend_url"": ""/dashboard/schedule"",
+        ""rest_api"": ""POST""
+    }
+
+    note: This function is only to be used for one-time events, such as interviews, seminars, end-of-year meetings. \n emergency_instructions: 'Do not pass none or null as a field value to any parameter, but rather, exclude that parameter until the value has been passed. Do not also pass an empty string as such value. Do not proceed to create the event until the user provides all required parameters",POST
